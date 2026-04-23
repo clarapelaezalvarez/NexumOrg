@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexum Organizacional - Protótipo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 3px solid #ffd700;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: #667eea;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo svg {
+            width: 60px;
+            height: 60px;
+        }
+
+        .title {
+            color: white;
+            flex: 1;
+        }
+
+        .title h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+
+        .title p {
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            background: #f5f5f5;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            color: #666;
+        }
+
+        .tab:hover {
+            background: #e0e0e0;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-board {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .board-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .board-cell {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 5px;
+            text-align: center;
+            border-radius: 10px;
+            font-weight: bold;
+            position: relative;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .board-cell.completed {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .checkmark {
+            font-size: 24px;
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: #ffd700;
+            color: #333;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .mission-number {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .mission-name {
+            font-size: 10px;
+        }
+
+        .message-area {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+        }
+
+        .message-area h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .message-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #ffeeba;
+        }
+
+        .connections-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .connections-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .connections-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .connection-item {
+            padding: 10px;
+            margin: 8px 0;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .connection-sync {
+            border-left-color: #38ef7d;
+        }
+
+        .connection-async {
+            border-left-color: #ffc107;
+        }
+
+        .mission-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mission-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .question {
+            margin: 15px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .question label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .question input, .question textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+
+        .question textarea {
+            min-height: 80px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .mosaic-report {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .mosaic-report h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .admin-section {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .participant-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .participant-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .search-box {
+            margin-bottom: 20px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .insight-highlight {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        @media (max-width: 768px) {
+            .board-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+            .connections-list {
+                grid-template-columns: 1fr;
+            }
+            .tab {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <svg viewBox="0 0 100 100" width="60" height="60">
+                <circle cx="50" cy="50" r="45" fill="#667eea" stroke="#764ba2" stroke-width="3"/>
+                <text x="50" y="65" text-anchor="middle" fill="white" font-size="40" font-weight="bold">N</text>
+                <path d="M30 30 L70 30 L70 70 L30 70 Z" fill="none" stroke="white" stroke-width="2"/>
+                <circle cx="50" cy="50" r="8" fill="#ffd700"/>
+            </svg>
+        </div>
+        <div class="title">
+            <h1>Nexum Organizacional</h1>
+            <p>Jogo de Conexões e Aprendizagem Colaborativa</p>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('home')">🏠 HOME</button>
+        <button class="tab" onclick="showTab('minha-rede')">🌐 MINHA REDE</button>
+        <button class="tab" onclick="showTab('habilidades')">⭐ HABILIDADES</button>
+        <button class="tab" onclick="showTab('areas')">🏢 ÁREAS</button>
+        <button class="tab" onclick="showTab('reflexoes')">💭 REFLEXÕES</button>
+        <button class="tab" onclick="showTab('mosaicos')">🎨 MOSAICOS</button>
+        <button class="tab" onclick="showTab('mestre')">👑 MESTRE DO JOGO</button>
+    </div>
+
+    <div id="home" class="tab-content active">
+        <div class="game-board">
+            <h2>📊 Tabuleiro do Jogo</h2>
+            <p>Complete todas as <strong>7 missões</strong> para chegar ao final!</p>
+            <div class="board-grid" id="boardGrid"></div>
+        </div>
+        <div class="message-area" id="messageArea">
+            <h4>📢 Mensagens do Mestre</h4>
+            <div id="gameMessages"></div>
+        </div>
+    </div>
+
+    <div id="minha-rede" class="tab-content">
+        <div class="connections-list">
+            <div class="connections-section">
+                <h3>🔗 Conexões ONA (Já Estabelecidas)</h3>
+                <div id="onaConnections"></div>
+            </div>
+            <div class="connections-section">
+                <h3>✨ Novas Conexões do Jogo</h3>
+                <div id="newConnections"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="habilidades" class="tab-content">
+        <div class="search-box">
+            <input type="text" id="searchSkills" placeholder="🔍 Buscar por nome do participante..." onkeyup="searchSkills()">
+        </div>
+        <div id="skillsContent"></div>
+    </div>
+
+    <div id="areas" class="tab-content">
+        <div class="search-box">
+            <input type="text" id="searchAreas" placeholder="🔍 Buscar por nome do participante..." onkeyup="searchAreas()">
+        </div>
+        <div id="areasContent"></div>
+    </div>
+
+    <div id="reflexoes" class="tab-content">
+        <div id="reflectionsContent"></div>
+    </div>
+
+    <div id="mosaicos" class="tab-content">
+        <div class="mosaic-report">
+            <h3>🎨 Mosaico de Habilidades</h3>
+            <div id="mosaicSkills"></div>
+        </div>
+        <div class="mosaic-report">
+            <h3>🎨 Mosaico de Áreas</h3>
+            <div id="mosaicAreas"></div>
+        </div>
+        <div class="mosaic-report">
+            <h3>🎨 Mosaico de Desafios</h3>
+            <div id="mosaicChallenges"></div>
+        </div>
+    </div>
+
+    <div id="mestre" class="tab-content">
+        <div class="admin-section">
+            <h3>👥 Lista de Participantes</h3>
+            <div id="participantsList" class="participant-list"></div>
+        </div>
+        <div class="admin-section">
+            <h3>📊 Estatísticas do Jogo</h3>
+            <p><strong>Duração:</strong> <span id="gameWeeks">3</span> semanas</p>
+            <p><strong>Total de Missões:</strong> <span id="totalMissions">7</span></p>
+            <p><strong>Participantes mais envolvidos:</strong> <span id="topPlayers"></span></p>
+            <p><strong>Participantes menos engajados:</strong> <span id="lowPlayers"></span></p>
+            <p><strong>Participantes inativos:</strong> <span id="inactivePlayers"></span></p>
+        </div>
+        <div class="admin-section">
+            <h3>📨 Enviar Mensagem</h3>
+            <select id="messageRecipient">
+                <option value="all">Todos os participantes</option>
+            </select>
+            <textarea id="adminMessage" rows="3" style="width:100%; margin-top:10px;" placeholder="Digite sua mensagem..."></textarea>
+            <button onclick="sendAdminMessage()" style="margin-top:10px;">Enviar Mensagem</button>
+        </div>
+        <div class="admin-section">
+            <h3>🎮 Controles do Jogo</h3>
+            <button onclick="endGame()">Encerrar Jogo</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Dados de exemplo para o protótipo
+    let gameActive = true;
+    let gameEnded = false;
+
+    // Participantes
+    const participants = [
+        { id: 1, name: "Ana Silva", area: "Marketing", phone: "(11) 98765-4321", email: "ana.silva@empresa.com", missionsCompleted: 5 },
+        { id: 2, name: "Carlos Santos", area: "Vendas", phone: "(11) 97654-3210", email: "carlos.santos@empresa.com", missionsCompleted: 3 },
+        { id: 3, name: "Mariana Costa", area: "RH", phone: "(11) 96543-2109", email: "mariana.costa@empresa.com", missionsCompleted: 7 },
+        { id: 4, name: "Roberto Alves", area: "TI", phone: "(11) 95432-1098", email: "roberto.alves@empresa.com", missionsCompleted: 0 },
+        { id: 5, name: "Fernanda Lima", area: "Financeiro", phone: "(11) 94321-0987", email: "fernanda.lima@empresa.com", missionsCompleted: 4 }
+    ];
+
+    // Missões
+    const missions = [
+        { id: 1, name: "Conhecer Ana", week: 1, type: "habilidades", participants: ["Ana Silva", "Carlos Santos"], completed: true, sync: true },
+        { id: 2, name: "Conhecer Carlos", week: 1, type: "habilidades", participants: ["Carlos Santos", "Mariana Costa"], completed: true, sync: true },
+        { id: 3, name: "Conhecer Mariana", week: 1, type: "habilidades", participants: ["Mariana Costa", "Fernanda Lima"], completed: true, sync: false },
+        { id: 4, name: "Descobrir Área Marketing", week: 2, type: "areas", participants: ["Ana Silva", "Roberto Alves"], completed: true, sync: true },
+        { id: 5, name: "Descobrir Área Vendas", week: 2, type: "areas", participants: ["Carlos Santos", "Fernanda Lima"], completed: true, sync: true },
+        { id: 6, name: "Descobrir Área TI", week: 2, type: "areas", participants: ["Roberto Alves", "Mariana Costa"], completed: true, sync: false },
+        { id: 7, name: "Reflexões Finais", week: 5, type: "reflexoes", participants: ["Ana Silva", "Carlos Santos", "Mariana Costa", "Roberto Alves", "Fernanda Lima"], completed: true, sync: false }
+    ];
+
+    // Conexões ONA (arquivo Excel 2) - REMOVIDO Carlos Santos das conexões da Ana Silva
+    const onaConnections = [
+        { participant: "Ana Silva", connections: ["Mariana Costa"] },  // Carlos Santos removido
+        { participant: "Carlos Santos", connections: ["Ana Silva", "Roberto Alves"] },
+        { participant: "Mariana Costa", connections: ["Fernanda Lima", "Ana Silva"] },
+        { participant: "Roberto Alves", connections: ["Carlos Santos"] },
+        { participant: "Fernanda Lima", connections: ["Mariana Costa", "Roberto Alves"] }
+    ];
+
+    // Respostas das missões com dados simulados
+    let skillsResponses = {
+        "Ana Silva": ["Marketing Digital, Análise de Comportamento, Branding", "Gestão de campanhas, Análise de métricas, Criação de conteúdo", "Lancei 3 produtos digitais, Liderei equipe de 10 pessoas", "IA aplicada ao marketing, Neurociência do consumo"],
+        "Carlos Santos": ["Negociação, CRM, Prospecção", "Fechamento de vendas, Gestão de carteira, Análise de pipeline", "Vendi R$5M em um ano, Construí equipe do zero", "Vendas consultivas, Account Based Marketing"],
+        "Mariana Costa": ["Desenvolvimento de pessoas, Cultura organizacional, Recrutamento", "Entrevistas, Avaliação de desempenho, Gestão de clima", "Implementei PDI, Reduzi turnover em 40%", "People Analytics, Employer Branding"],
+        "Roberto Alves": ["Infraestrutura de TI, Segurança da informação, Cloud Computing", "Administração de redes, Gestão de projetos ágeis, Suporte", "Migrei 5 sistemas para nuvem", "DevOps, Inteligência Artificial"],
+        "Fernanda Lima": ["Planejamento financeiro, Controladoria, Orçamento", "Análise de balanços, Fluxo de caixa, Forecasting", "Reduzi custos em 20%, Implementei novo ERP", "Fintechs, Blockchain"]
+    };
+    
+    let areasResponses = {
+        "Ana Silva": [
+            "Marketing conecta a empresa com o mercado, criando estratégias de comunicação e posicionamento de marca",
+            "Medir o ROI das campanhas e mostrar o valor do marketing para o negócio",
+            "Maior integração entre marketing e vendas, com processos compartilhados",
+            "Que marketing não é só gasto, é investimento que gera retorno de longo prazo"
+        ],
+        "Carlos Santos": [
+            "Vendas é responsável por converter leads em clientes e atingir as metas de faturamento",
+            "Alta competitividade no mercado e prazos agressivos dos clientes",
+            "Alinhamento de expectativas sobre leads qualificados entre marketing e vendas",
+            "Que vendas enfrenta muita pressão e precisa de suporte integrado"
+        ],
+        "Mariana Costa": [
+            "RH cuida do desenvolvimento das pessoas, recrutamento, benefícios e clima organizacional",
+            "Reter talentos e engajar times em um ambiente de alta pressão",
+            "Mais proximidade entre RH e lideranças para entender necessidades reais",
+            "RH é estratégico, não só operacional, e precisa de apoio das lideranças"
+        ],
+        "Roberto Alves": [
+            "TI garante a infraestrutura tecnológica, segurança da informação e suporte aos usuários",
+            "Equilibrar demandas urgentes com projetos estratégicos de longo prazo",
+            "Compreensão de que TI precisa de planejamento, não só apagar incêndios",
+            "Que TI é habilitadora de negócios, não um centro de custo"
+        ],
+        "Fernanda Lima": [
+            "Financeiro controla orçamentos, fluxo de caixa, investimentos e compliance",
+            "Conciliar planejamento de longo prazo com necessidades imediatas das áreas",
+            "Previsibilidade nos pedidos e projetos para planejamento financeiro",
+            "Disciplina orçamentária não é falta de apoio, é sustentabilidade"
+        ]
+    };
+    
+    let reflectionsResponses = {
+        "Ana Silva": {
+            a: "Uma jornada de descobertas sobre como realmente colaboramos",
+            b: "Descobri que muitas áreas desconhecem o potencial do marketing",
+            c: "A conversa com o Carlos sobre alinhamento MKT e Vendas foi reveladora",
+            d: "Criar rituais mensais de alinhamento entre áreas"
+        },
+        "Carlos Santos": {
+            a: "O Nexum abriu meus olhos para o poder das conexões genuínas",
+            b: "Aprendi como o RH e TI são fundamentais para o sucesso das vendas",
+            c: "A entrevista com a Mariana sobre desafios de RH me marcou muito",
+            d: "Implementar reuniões semanais de alinhamento comercial"
+        },
+        "Mariana Costa": {
+            a: "Conectar pessoas transforma culturas organizacionais",
+            b: "Vi o quanto as áreas têm percepções distorcidas umas das outras",
+            c: "A conversa com a Fernanda sobre planejamento financeiro",
+            d: "Criar programa de job rotation para integrar áreas"
+        },
+        "Roberto Alves": {
+            a: "TI precisa se comunicar melhor com o negócio",
+            b: "Descobri que o marketing tem muito a ensinar sobre comunicação",
+            c: "A entrevista com a Ana sobre marketing digital",
+            d: "Criar um comitê de governança de TI com participação das áreas"
+        },
+        "Fernanda Lima": {
+            a: "Números contam histórias, mas pessoas criam soluções",
+            b: "Entendi os desafios reais de cada área além dos números",
+            c: "A conversa com o Roberto sobre investimentos em TI",
+            d: "Revisar processo de planejamento orçamentário colaborativo"
+        }
+    };
+
+    // Inicializar respostas padrão
+    participants.forEach(p => {
+        if (!skillsResponses[p.name]) skillsResponses[p.name] = [];
+        if (!areasResponses[p.name]) areasResponses[p.name] = [];
+        if (!reflectionsResponses[p.name]) reflectionsResponses[p.name] = null;
+    });
+
+    // Mensagens do mestre
+    let gameMessages = [
+        { text: "Bem-vindos ao Nexum Organizacional! 🎉", timestamp: new Date(), sender: "Mestre" },
+        { text: "Parabéns! Todas as missões foram concluídas! 🏆", timestamp: new Date(), sender: "Mestre" }
+    ];
+
+    // Renderizar tabuleiro
+    function renderBoard() {
+        const boardGrid = document.getElementById('boardGrid');
+        boardGrid.innerHTML = '';
+        missions.forEach((mission, index) => {
+            const cell = document.createElement('div');
+            cell.className = `board-cell ${mission.completed ? 'completed' : ''}`;
+            cell.innerHTML = `
+                <div class="mission-number">Missão ${index + 1}</div>
+                <div class="mission-name">${mission.name}</div>
+                ${mission.completed ? '<div class="checkmark">✓</div>' : ''}
+            `;
+            boardGrid.appendChild(cell);
+        });
+    }
+
+    // Renderizar conexões
+    function renderConnections() {
+        // Usuário atual logado (para demonstração, usamos Ana Silva)
+        const currentUser = participants[0]; // Ana Silva
+        
+        const onaDiv = document.getElementById('onaConnections');
+        const newDiv = document.getElementById('newConnections');
+        
+        // Conexões ONA - sem Carlos Santos
+        const userONA = onaConnections.find(c => c.participant === currentUser.name);
+        onaDiv.innerHTML = userONA && userONA.connections.length > 0 ? userONA.connections.map(conn => `
+            <div class="connection-item">
+                <strong>${conn}</strong> 
+                <span style="color: #667eea; font-size: 12px; margin-left: 10px;">(Pré-existente)</span>
+            </div>
+        `).join('') : '<p>Nenhuma conexão ONA encontrada</p>';
+        
+        // Novas conexões do jogo (Carlos aparece aqui agora)
+        const newConns = missions.filter(m => m.completed && m.participants.includes(currentUser.name));
+        newDiv.innerHTML = newConns.length > 0 ? newConns.map(m => {
+            const otherPerson = m.participants.find(p => p !== currentUser.name);
+            return `<div class="connection-item ${m.sync ? 'connection-sync' : 'connection-async'}">
+                <strong>${otherPerson}</strong> - ${m.sync ? 'S (Síncrona)' : 'A (Assíncrona)'}
+                <span style="color: #38ef7d; font-size: 12px; margin-left: 10px;">✓ Nova conexão</span>
+            </div>`;
+        }).join('') : '<p>Nenhuma nova conexão ainda</p>';
+    }
+
+    // Renderizar habilidades
+    function renderSkills() {
+        const skillsDiv = document.getElementById('skillsContent');
+        skillsDiv.innerHTML = participants.map(p => `
+            <div class="mission-card" data-name="${p.name}">
+                <h3>${p.name} - ${p.area}</h3>
+                ${!gameEnded && gameActive ? `
+                    <div class="question">
+                        <label>Conheço profundamente (1 a 3 áreas de conhecimento aprofundado):</label>
+                        <input type="text" id="skill_a_${p.id}" value="${skillsResponses[p.name][0] || ''}" placeholder="Ex: Marketing Digital, Análise de Dados...">
+                    </div>
+                    <div class="question">
+                        <label>Consigo fazer isso na prática (1 a 3 habilidades práticas):</label>
+                        <input type="text" id="skill_b_${p.id}" value="${skillsResponses[p.name][1] || ''}" placeholder="Ex: Gestão de Projetos, Liderança...">
+                    </div>
+                    <div class="question">
+                        <label>Eu já vivi (1 a 3 experiências de vida relevantes):</label>
+                        <input type="text" id="skill_c_${p.id}" value="${skillsResponses[p.name][2] || ''}" placeholder="Ex: Implementação de CRM, Reestruturação...">
+                    </div>
+                    <div class="question">
+                        <label>Quero explorar (1 a 3 curiosidades/intuições):</label>
+                        <input type="text" id="skill_d_${p.id}" value="${skillsResponses[p.name][3] || ''}" placeholder="Ex: IA, Metodologias Ágeis...">
+                    </div>
+                    <button onclick="saveSkills(${p.id})">Salvar Percepções</button>
+                ` : `
+                    <div class="question">
+                        <strong>Conhecimentos:</strong> ${skillsResponses[p.name][0] || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Habilidades práticas:</strong> ${skillsResponses[p.name][1] || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Experiências:</strong> ${skillsResponses[p.name][2] || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Curiosidades:</strong> ${skillsResponses[p.name][3] || 'Não preenchido'}
+                    </div>
+                `}
+            </div>
+        `).join('');
+    }
+
+    // Salvar habilidades
+    window.saveSkills = function(participantId) {
+        if (!gameActive || gameEnded) {
+            alert('O jogo está encerrado. Não é possível alterar os dados.');
+            return;
+        }
+        const participant = participants.find(p => p.id === participantId);
+        const a = document.getElementById(`skill_a_${participantId}`).value;
+        const b = document.getElementById(`skill_b_${participantId}`).value;
+        const c = document.getElementById(`skill_c_${participantId}`).value;
+        const d = document.getElementById(`skill_d_${participantId}`).value;
+        
+        skillsResponses[participant.name] = [a, b, c, d];
+        alert(`Percepções sobre ${participant.name} salvas com sucesso!`);
+        renderSkills();
+    };
+
+    // Buscar habilidades
+    window.searchSkills = function() {
+        const searchTerm = document.getElementById('searchSkills').value.toLowerCase();
+        const cards = document.querySelectorAll('#skillsContent .mission-card');
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(searchTerm) ? 'block' : 'none';
+        });
+    };
+
+    // Renderizar áreas
+    function renderAreas() {
+        const areasDiv = document.getElementById('areasContent');
+        areasDiv.innerHTML = participants.map(p => `
+            <div class="mission-card" data-name="${p.name}">
+                <h3>${p.name} - ${p.area}</h3>
+                ${!gameEnded && gameActive ? `
+                    <div class="question">
+                        <label>Como funciona a sua área?</label>
+                        <textarea id="area_a_${p.id}" rows="2">${areasResponses[p.name][0] || ''}</textarea>
+                    </div>
+                    <div class="question">
+                        <label>Qual é o maior desafio que sua área enfrenta hoje?</label>
+                        <textarea id="area_b_${p.id}" rows="2">${areasResponses[p.name][1] || ''}</textarea>
+                    </div>
+                    <div class="question">
+                        <label>Se você pudesse mudar uma coisa no relacionamento com a minha área, o que seria?</label>
+                        <textarea id="area_c_${p.id}" rows="2">${areasResponses[p.name][2] || ''}</textarea>
+                    </div>
+                    <div class="question">
+                        <label>O que você gostaria que outras áreas entendessem sobre a sua área?</label>
+                        <textarea id="area_d_${p.id}" rows="2">${areasResponses[p.name][3] || ''}</textarea>
+                    </div>
+                    <button onclick="saveAreas(${p.id})">Salvar Percepções</button>
+                ` : `
+                    <div class="question">
+                        <strong>Funcionamento da área:</strong> ${areasResponses[p.name][0] || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Maior desafio:</strong> ${areasResponses[p.name][1] || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Mudança no relacionamento interáreas:</strong> ${areasResponses[p.name][2] || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>O que outras áreas devem entender:</strong> ${areasResponses[p.name][3] || 'Não preenchido'}
+                    </div>
+                `}
+            </div>
+        `).join('');
+    }
+
+    window.saveAreas = function(participantId) {
+        if (!gameActive || gameEnded) {
+            alert('O jogo está encerrado. Não é possível alterar os dados.');
+            return;
+        }
+        const participant = participants.find(p => p.id === participantId);
+        const a = document.getElementById(`area_a_${participantId}`).value;
+        const b = document.getElementById(`area_b_${participantId}`).value;
+        const c = document.getElementById(`area_c_${participantId}`).value;
+        const d = document.getElementById(`area_d_${participantId}`).value;
+        
+        areasResponses[participant.name] = [a, b, c, d];
+        alert(`Percepções sobre ${participant.name} salvas com sucesso!`);
+        renderAreas();
+    };
+
+    window.searchAreas = function() {
+        const searchTerm = document.getElementById('searchAreas').value.toLowerCase();
+        const cards = document.querySelectorAll('#areasContent .mission-card');
+        cards.forEach(card => {
+            const name = card.getAttribute('data-name').toLowerCase();
+            card.style.display = name.includes(searchTerm) ? 'block' : 'none';
+        });
+    };
+
+    // Renderizar reflexões
+    function renderReflections() {
+        const reflectionsDiv = document.getElementById('reflectionsContent');
+        reflectionsDiv.innerHTML = participants.map(p => `
+            <div class="mission-card">
+                <h3>${p.name} - ${p.area}</h3>
+                ${!gameEnded && gameActive ? `
+                    <div class="question">
+                        <label>Se você pudesse resumir sua experiência no Nexum em uma frase, qual seria?</label>
+                        <input type="text" id="ref_a_${p.id}" value="${reflectionsResponses[p.name]?.a || ''}">
+                    </div>
+                    <div class="question">
+                        <label>O que você descobriu sobre a organização que não sabia antes?</label>
+                        <textarea id="ref_b_${p.id}" rows="2">${reflectionsResponses[p.name]?.b || ''}</textarea>
+                    </div>
+                    <div class="question">
+                        <label>Qual conversa mais marcou você? Por quê?</label>
+                        <textarea id="ref_c_${p.id}" rows="2">${reflectionsResponses[p.name]?.c || ''}</textarea>
+                    </div>
+                    <div class="question">
+                        <label>Se você pudesse mudar uma coisa na forma como colaboramos aqui, o que seria?</label>
+                        <textarea id="ref_d_${p.id}" rows="2">${reflectionsResponses[p.name]?.d || ''}</textarea>
+                    </div>
+                    <button onclick="saveReflections(${p.id})">Salvar Reflexões</button>
+                ` : `
+                    <div class="question">
+                        <strong>Experiência resumida:</strong> ${reflectionsResponses[p.name]?.a || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Descobertas:</strong> ${reflectionsResponses[p.name]?.b || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Conversa mais marcante:</strong> ${reflectionsResponses[p.name]?.c || 'Não preenchido'}
+                    </div>
+                    <div class="question">
+                        <strong>Mudança na colaboração:</strong> ${reflectionsResponses[p.name]?.d || 'Não preenchido'}
+                    </div>
+                `}
+            </div>
+        `).join('');
+    }
+
+    window.saveReflections = function(participantId) {
+        if (!gameActive || gameEnded) {
+            alert('O jogo está encerrado. Não é possível alterar os dados.');
+            return;
+        }
+        const participant = participants.find(p => p.id === participantId);
+        reflectionsResponses[participant.name] = {
+            a: document.getElementById(`ref_a_${participantId}`).value,
+            b: document.getElementById(`ref_b_${participantId}`).value,
+            c: document.getElementById(`ref_c_${participantId}`).value,
+            d: document.getElementById(`ref_d_${participantId}`).value
+        };
+        alert(`Reflexões de ${participant.name} salvas com sucesso!`);
+        renderReflections();
+    };
+
+    // Renderizar mosaicos com dados reais simulados
+    function renderMosaics() {
+        const skillsMosaic = document.getElementById('mosaicSkills');
+        const areasMosaic = document.getElementById('mosaicAreas');
+        const challengesMosaic = document.getElementById('mosaicChallenges');
+        
+        // Mosaico de Habilidades
+        skillsMosaic.innerHTML = `
+            <div class="insight-highlight">
+                <strong>📊 Síntese das Habilidades - Nexum Organizacional</strong><br><br>
+                Após analisar as respostas dos 5 participantes do jogo, identificamos os seguintes padrões e insights:
+            </div>
+            
+            <p><strong>🎯 Principais Áreas de Conhecimento (Expertise Técnica):</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Marketing Digital, Branding e Análise de Comportamento</li>
+                <li>Negociação, CRM e Prospecção de Vendas</li>
+                <li>Desenvolvimento de Pessoas e Cultura Organizacional</li>
+                <li>Infraestrutura de TI, Segurança e Cloud Computing</li>
+                <li>Planejamento Financeiro, Controladoria e Orçamento</li>
+            </ul>
+            
+            <p><strong>🔧 Habilidades Práticas Mais Citadas (Know-how):</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Gestão de campanhas e análise de métricas</li>
+                <li>Fechamento de vendas e gestão de carteira</li>
+                <li>Entrevistas e avaliação de desempenho</li>
+                <li>Administração de redes e gestão de projetos ágeis</li>
+                <li>Análise de balanços e forecasting</li>
+            </ul>
+            
+            <p><strong>💡 Experiências de Vida Relevantes:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Lançamento de produtos digitais e liderança de equipes</li>
+                <li>Criação de equipes de vendas do zero e metas expressivas</li>
+                <li>Implementação de PDI e redução de turnover</li>
+                <li>Migração de sistemas para nuvem</li>
+                <li>Redução de custos e implementação de ERP</li>
+            </ul>
+            
+            <p><strong>🚀 Curiosidades e Interesses de Exploração:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>IA aplicada ao marketing e neurociência do consumo</li>
+                <li>Vendas consultivas e Account Based Marketing</li>
+                <li>People Analytics e Employer Branding</li>
+                <li>DevOps e Inteligência Artificial</li>
+                <li>Fintechs e Blockchain</li>
+            </ul>
+            
+            <p><strong>📋 Lista completa de respostas dos participantes:</strong></p>
+            ${Object.entries(skillsResponses).map(([name, resp]) => `
+                <div class="connection-item">
+                    <strong>${name}:</strong><br>
+                    🎯 Conhecimentos: ${resp[0]}<br>
+                    🔧 Habilidades práticas: ${resp[1]}<br>
+                    💡 Experiências: ${resp[2]}<br>
+                    🚀 Curiosidades: ${resp[3]}
+                </div>
+            `).join('')}
+        `;
+        
+        // Mosaico de Áreas
+        areasMosaic.innerHTML = `
+            <div class="insight-highlight">
+                <strong>📊 Síntese das Áreas - Nexum Organizacional</strong><br><br>
+                A análise das percepções sobre as diferentes áreas organizacionais revelou os seguintes insights:
+            </div>
+            
+            <p><strong>🏢 Como funciona cada área (Visão dos participantes):</strong></p>
+            ${Object.entries(areasResponses).map(([name, resp]) => `
+                <div style="margin-bottom: 15px;">
+                    <strong>${name} (${participants.find(p=>p.name===name).area}):</strong><br>
+                    "${resp[0]}"
+                </div>
+            `).join('')}
+            
+            <p><strong>⚠️ Maiores Desafios Identificados:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li><strong>Marketing:</strong> Medir ROI das campanhas e mostrar valor para o negócio</li>
+                <li><strong>Vendas:</strong> Alta competitividade e prazos agressivos dos clientes</li>
+                <li><strong>RH:</strong> Reter talentos e engajar times sob pressão</li>
+                <li><strong>TI:</strong> Equilibrar demandas urgentes com projetos estratégicos</li>
+                <li><strong>Financeiro:</strong> Conciliar planejamento de longo prazo com necessidades imediatas</li>
+            </ul>
+            
+            <p><strong>🔄 Mudanças Desejadas no Relacionamento Interáreas:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Maior integração entre Marketing e Vendas</li>
+                <li>Alinhamento de expectativas sobre leads qualificados</li>
+                <li>Proximidade entre RH e lideranças</li>
+                <li>Compreensão de que TI precisa de planejamento</li>
+                <li>Previsibilidade nos pedidos para planejamento financeiro</li>
+            </ul>
+            
+            <p><strong>💭 O que cada área gostaria que as outras entendessem:</strong></p>
+            ${Object.entries(areasResponses).map(([name, resp]) => `
+                <div class="connection-item">
+                    <strong>${name}:</strong><br>
+                    "${resp[3]}"
+                </div>
+            `).join('')}
+        `;
+        
+        // Mosaico de Desafios (Reflexões)
+        challengesMosaic.innerHTML = `
+            <div class="insight-highlight">
+                <strong>📊 Síntese dos Desafios Organizacionais - Nexum Organizacional</strong><br><br>
+                Com base nas reflexões finais dos participantes, identificamos os principais aprendizados e propostas de melhoria:
+            </div>
+            
+            <p><strong>🌟 Frases que Resumem a Experiência Nexum:</strong></p>
+            ${Object.entries(reflectionsResponses).map(([name, resp]) => `
+                <div class="connection-item">
+                    <strong>${name}:</strong><br>
+                    "${resp.a}"
+                </div>
+            `).join('')}
+            
+            <p><strong>🔍 Descobertas sobre a Organização:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Muitas áreas desconhecem o potencial e os desafios umas das outras</li>
+                <li>RH e TI são fundamentais para o sucesso das vendas</li>
+                <li>Áreas têm percepções distorcidas entre si</li>
+                <li>TI precisa se comunicar melhor com o negócio</li>
+                <li>Números contam histórias, mas pessoas criam soluções</li>
+            </ul>
+            
+            <p><strong>💬 Conversas Mais Marcantes:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Alinhamento entre Marketing e Vendas</li>
+                <li>Desafios de RH e retenção de talentos</li>
+                <li>Planejamento financeiro e orçamento colaborativo</li>
+                <li>Marketing digital e comunicação com o negócio</li>
+                <li>Investimentos em TI e governança</li>
+            </ul>
+            
+            <p><strong>🛠️ Propostas de Mudança na Colaboração:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+                <li>Criar rituais mensais de alinhamento entre áreas</li>
+                <li>Implementar reuniões semanais de alinhamento comercial</li>
+                <li>Criar programa de job rotation para integrar áreas</li>
+                <li>Estabelecer comitê de governança de TI com participação das áreas</li>
+                <li>Revisar processo de planejamento orçamentário colaborativo</li>
+            </ul>
+            
+            <p><strong>📋 Lista completa de reflexões dos participantes:</strong></p>
+            ${Object.entries(reflectionsResponses).map(([name, resp]) => `
+                <div class="connection-item">
+                    <strong>${name}:</strong><br>
+                    ✨ Frase resumo: ${resp.a}<br>
+                    🔍 Descobertas: ${resp.b}<br>
+                    💬 Conversa marcante: ${resp.c}<br>
+                    🛠️ Mudança proposta: ${resp.d}
+                </div>
+            `).join('')}
+            
+            <div class="insight-highlight" style="margin-top: 20px;">
+                <strong>🎯 Conclusão Geral do Nexum Organizacional:</strong><br><br>
+                O jogo revelou que a organização possui talentos e conhecimentos distribuídos que precisam ser melhor conectados. Os participantes identificaram a necessidade de:<br><br>
+                1. <strong>Maior integração interáreas</strong> - Criar espaços formais e informais de troca<br>
+                2. <strong>Comunicação mais transparente</strong> - Compartilhar desafios e limitações<br>
+                3. <strong>Alinhamento de expectativas</strong> - Construir processos colaborativos<br>
+                4. <strong>Valorização das diferentes perspectivas</strong> - Cada área traz insights únicos<br>
+                5. <strong>Cultura de aprendizado contínuo</strong> - Explorar novas habilidades e conhecimentos
+            </div>
+        `;
+    }
+
+    // Renderizar área do mestre
+    function renderMaster() {
+        const participantsList = document.getElementById('participantsList');
+        participantsList.innerHTML = participants.map(p => `
+            <div class="participant-item">
+                <span><strong>${p.name}</strong> - ${p.area}</span>
+                <span>Missões: ${p.missionsCompleted}/7</span>
+            </div>
+        `).join('');
+        
+        const topPlayers = [...participants].sort((a,b) => b.missionsCompleted - a.missionsCompleted).slice(0,2);
+        const lowPlayers = participants.filter(p => p.missionsCompleted > 0 && p.missionsCompleted < 3);
+        const inactivePlayers = participants.filter(p => p.missionsCompleted === 0);
+        
+        document.getElementById('topPlayers').innerHTML = topPlayers.map(p => p.name).join(', ');
+        document.getElementById('lowPlayers').innerHTML = lowPlayers.map(p => p.name).join(', ');
+        document.getElementById('inactivePlayers').innerHTML = inactivePlayers.map(p => p.name).join(', ');
+        
+        const recipientSelect = document.getElementById('messageRecipient');
+        recipientSelect.innerHTML = '<option value="all">Todos os participantes</option>' + 
+            participants.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    }
+
+    // Enviar mensagem do mestre
+    window.sendAdminMessage = function() {
+        const message = document.getElementById('adminMessage').value;
+        const recipient = document.getElementById('messageRecipient').value;
+        if (!message) {
+            alert('Digite uma mensagem');
+            return;
+        }
+        gameMessages.push({
+            text: message,
+            timestamp: new Date(),
+            sender: recipient === 'all' ? 'Mestre (Para todos)' : `Mestre (Para ${recipient})`
+        });
+        renderMessages();
+        document.getElementById('adminMessage').value = '';
+        alert('Mensagem enviada!');
+    };
+
+    // Renderizar mensagens
+    function renderMessages() {
+        const messagesDiv = document.getElementById('gameMessages');
+        messagesDiv.innerHTML = gameMessages.map(msg => `
+            <div class="message-item">
+                <strong>${msg.sender}</strong> - ${msg.timestamp.toLocaleString()}<br>
+                ${msg.text}
+            </div>
+        `).join('');
+    }
+
+    // Encerrar jogo
+    window.endGame = function() {
+        if (confirm('Tem certeza que deseja encerrar o jogo? Após encerrado, não será possível alterar os dados.')) {
+            gameActive = false;
+            gameEnded = true;
+            renderSkills();
+            renderAreas();
+            renderReflections();
+            renderMosaics();
+            alert('Jogo encerrado! Os mosaicos agora estão disponíveis.');
+        }
+    };
+
+    // Mostrar aba
+    window.showTab = function(tabId) {
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+        
+        // Renderizar conteúdo específico da aba
+        if (tabId === 'home') renderBoard();
+        else if (tabId === 'minha-rede') renderConnections();
+        else if (tabId === 'habilidades') renderSkills();
+        else if (tabId === 'areas') renderAreas();
+        else if (tabId === 'reflexoes') renderReflections();
+        else if (tabId === 'mosaicos') {
+            renderMosaics();
+        }
+        else if (tabId === 'mestre') renderMaster();
+    };
+
+    // Definir que o jogo já foi encerrado para mostrar os mosaicos
+    gameEnded = true;
+    gameActive = false;
+
+    // Inicializar
+    renderMessages();
+    renderBoard();
+    renderMaster();
+</script>
+</body>
+</html>
