@@ -72,6 +72,23 @@
             opacity: 0.9;
         }
 
+        .welcome-area {
+            background: linear-gradient(135deg, #289AD4 0%, #2D569E 100%);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .welcome-message {
+            color: white;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .welcome-message strong {
+            color: #ffd700;
+            font-size: 20px;
+        }
+
         .tabs {
             display: flex;
             background: #f5f5f5;
@@ -344,6 +361,12 @@
                 padding: 10px 15px;
                 font-size: 12px;
             }
+            .welcome-message {
+                font-size: 14px;
+            }
+            .welcome-message strong {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
@@ -361,6 +384,13 @@
         <div class="title">
             <h1>Nexum Organizacional</h1>
             <p>Jogo de Conexões e Aprendizagem Colaborativa</p>
+        </div>
+    </div>
+
+    <!-- Área de saudação - será preenchida dinamicamente -->
+    <div class="welcome-area" id="welcomeArea">
+        <div class="welcome-message" id="welcomeMessage">
+            Carregando...
         </div>
     </div>
 
@@ -464,6 +494,9 @@
     // Dados de exemplo para o protótipo
     let gameActive = true;
     let gameEnded = false;
+    
+    // Usuário atual logado (pode ser alterado para simular diferentes participantes)
+    let currentUser = { id: 1, name: "Ana Silva", area: "Marketing", phone: "(11) 98765-4321", email: "ana.silva@empresa.com", missionsCompleted: 5 };
 
     // Participantes
     const participants = [
@@ -582,6 +615,24 @@
         { text: "Parabéns! Todas as missões foram concluídas! 🏆", timestamp: new Date(), sender: "Mestre" }
     ];
 
+    // Função para atualizar a saudação
+    function updateWelcomeMessage() {
+        const welcomeDiv = document.getElementById('welcomeMessage');
+        const hour = new Date().getHours();
+        let greeting = "";
+        
+        if (hour < 12) {
+            greeting = "Bom dia";
+        } else if (hour < 18) {
+            greeting = "Boa tarde";
+        } else {
+            greeting = "Boa noite";
+        }
+        
+        welcomeDiv.innerHTML = `${greeting}, <strong>${currentUser.name}</strong>! 👋<br>
+        <span style="font-size: 14px; opacity: 0.9;">Bem-vinda(o) ao Nexum Organizacional. Área: ${currentUser.area}</span>`;
+    }
+
     // Renderizar tabuleiro
     function renderBoard() {
         const boardGrid = document.getElementById('boardGrid');
@@ -600,7 +651,6 @@
 
     // Renderizar conexões
     function renderConnections() {
-        const currentUser = participants[0];
         const onaDiv = document.getElementById('onaConnections');
         const newDiv = document.getElementById('newConnections');
         
@@ -976,6 +1026,8 @@
     gameEnded = true;
     gameActive = false;
 
+    // Inicializar tudo
+    updateWelcomeMessage();
     renderMessages();
     renderBoard();
     renderMaster();
