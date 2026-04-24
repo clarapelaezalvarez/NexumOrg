@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #289AD4 0%, #2D569E 100%);
             min-height: 100vh;
             padding: 20px;
         }
@@ -28,15 +28,16 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #289AD4 0%, #2D569E 100%);
             padding: 20px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 20px;
             border-bottom: 3px solid #ffd700;
         }
 
-        .logo {
+        .logo-left {
             width: 80px;
             height: 80px;
             background: white;
@@ -46,11 +47,12 @@
             justify-content: center;
             font-weight: bold;
             font-size: 24px;
-            color: #667eea;
+            color: #289AD4;
             box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            flex-shrink: 0;
         }
 
-        .logo svg {
+        .logo-left svg {
             width: 60px;
             height: 60px;
         }
@@ -58,6 +60,7 @@
         .title {
             color: white;
             flex: 1;
+            text-align: center;
         }
 
         .title h1 {
@@ -93,8 +96,8 @@
 
         .tab.active {
             background: white;
-            color: #667eea;
-            border-bottom: 3px solid #667eea;
+            color: #289AD4;
+            border-bottom: 3px solid #289AD4;
         }
 
         .tab-content {
@@ -127,7 +130,7 @@
         }
 
         .board-cell {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #289AD4 0%, #2D569E 100%);
             color: white;
             padding: 15px 5px;
             text-align: center;
@@ -204,7 +207,7 @@
         }
 
         .connections-section h3 {
-            color: #667eea;
+            color: #289AD4;
             margin-bottom: 15px;
         }
 
@@ -213,7 +216,7 @@
             margin: 8px 0;
             background: white;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #289AD4;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -233,15 +236,8 @@
         }
 
         .mission-card h3 {
-            color: #667eea;
+            color: #289AD4;
             margin-bottom: 15px;
-        }
-
-        .contact-info {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 15px 0;
         }
 
         .question {
@@ -270,7 +266,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #289AD4 0%, #2D569E 100%);
             color: white;
             border: none;
             padding: 12px 24px;
@@ -293,7 +289,7 @@
         }
 
         .mosaic-report h3 {
-            color: #667eea;
+            color: #289AD4;
             margin-bottom: 15px;
         }
 
@@ -330,11 +326,11 @@
         }
 
         .insight-highlight {
-            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            background: linear-gradient(135deg, #289AD420 0%, #2D569E20 100%);
             padding: 15px;
             border-radius: 10px;
             margin: 10px 0;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #289AD4;
         }
 
         @media (max-width: 768px) {
@@ -354,9 +350,9 @@
 <body>
 <div class="container">
     <div class="header">
-        <div class="logo">
+        <div class="logo-left">
             <svg viewBox="0 0 100 100" width="60" height="60">
-                <circle cx="50" cy="50" r="45" fill="#667eea" stroke="#764ba2" stroke-width="3"/>
+                <circle cx="50" cy="50" r="45" fill="#289AD4" stroke="#2D569E" stroke-width="3"/>
                 <text x="50" y="65" text-anchor="middle" fill="white" font-size="40" font-weight="bold">N</text>
                 <path d="M30 30 L70 30 L70 70 L30 70 Z" fill="none" stroke="white" stroke-width="2"/>
                 <circle cx="50" cy="50" r="8" fill="#ffd700"/>
@@ -489,9 +485,9 @@
         { id: 7, name: "Reflexões Finais", week: 5, type: "reflexoes", participants: ["Ana Silva", "Carlos Santos", "Mariana Costa", "Roberto Alves", "Fernanda Lima"], completed: true, sync: false }
     ];
 
-    // Conexões ONA (arquivo Excel 2) - REMOVIDO Carlos Santos das conexões da Ana Silva
+    // Conexões ONA
     const onaConnections = [
-        { participant: "Ana Silva", connections: ["Mariana Costa"] },  // Carlos Santos removido
+        { participant: "Ana Silva", connections: ["Mariana Costa"] },
         { participant: "Carlos Santos", connections: ["Ana Silva", "Roberto Alves"] },
         { participant: "Mariana Costa", connections: ["Fernanda Lima", "Ana Silva"] },
         { participant: "Roberto Alves", connections: ["Carlos Santos"] },
@@ -604,22 +600,18 @@
 
     // Renderizar conexões
     function renderConnections() {
-        // Usuário atual logado (para demonstração, usamos Ana Silva)
-        const currentUser = participants[0]; // Ana Silva
-        
+        const currentUser = participants[0];
         const onaDiv = document.getElementById('onaConnections');
         const newDiv = document.getElementById('newConnections');
         
-        // Conexões ONA - sem Carlos Santos
         const userONA = onaConnections.find(c => c.participant === currentUser.name);
         onaDiv.innerHTML = userONA && userONA.connections.length > 0 ? userONA.connections.map(conn => `
             <div class="connection-item">
                 <strong>${conn}</strong> 
-                <span style="color: #667eea; font-size: 12px; margin-left: 10px;">(Pré-existente)</span>
+                <span style="color: #289AD4; font-size: 12px; margin-left: 10px;">(Pré-existente)</span>
             </div>
         `).join('') : '<p>Nenhuma conexão ONA encontrada</p>';
         
-        // Novas conexões do jogo (Carlos aparece aqui agora)
         const newConns = missions.filter(m => m.completed && m.participants.includes(currentUser.name));
         newDiv.innerHTML = newConns.length > 0 ? newConns.map(m => {
             const otherPerson = m.participants.find(p => p !== currentUser.name);
@@ -672,7 +664,6 @@
         `).join('');
     }
 
-    // Salvar habilidades
     window.saveSkills = function(participantId) {
         if (!gameActive || gameEnded) {
             alert('O jogo está encerrado. Não é possível alterar os dados.');
@@ -689,7 +680,6 @@
         renderSkills();
     };
 
-    // Buscar habilidades
     window.searchSkills = function() {
         const searchTerm = document.getElementById('searchSkills').value.toLowerCase();
         const cards = document.querySelectorAll('#skillsContent .mission-card');
@@ -699,7 +689,6 @@
         });
     };
 
-    // Renderizar áreas
     function renderAreas() {
         const areasDiv = document.getElementById('areasContent');
         areasDiv.innerHTML = participants.map(p => `
@@ -766,7 +755,6 @@
         });
     };
 
-    // Renderizar reflexões
     function renderReflections() {
         const reflectionsDiv = document.getElementById('reflectionsContent');
         reflectionsDiv.innerHTML = participants.map(p => `
@@ -824,13 +812,12 @@
         renderReflections();
     };
 
-    // Renderizar mosaicos com dados reais simulados
     function renderMosaics() {
         const skillsMosaic = document.getElementById('mosaicSkills');
         const areasMosaic = document.getElementById('mosaicAreas');
         const challengesMosaic = document.getElementById('mosaicChallenges');
         
-        // Mosaico de Habilidades
+        const allSkills = Object.entries(skillsResponses).filter(([_, responses]) => responses[0]);
         skillsMosaic.innerHTML = `
             <div class="insight-highlight">
                 <strong>📊 Síntese das Habilidades - Nexum Organizacional</strong><br><br>
@@ -846,35 +833,8 @@
                 <li>Planejamento Financeiro, Controladoria e Orçamento</li>
             </ul>
             
-            <p><strong>🔧 Habilidades Práticas Mais Citadas (Know-how):</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>Gestão de campanhas e análise de métricas</li>
-                <li>Fechamento de vendas e gestão de carteira</li>
-                <li>Entrevistas e avaliação de desempenho</li>
-                <li>Administração de redes e gestão de projetos ágeis</li>
-                <li>Análise de balanços e forecasting</li>
-            </ul>
-            
-            <p><strong>💡 Experiências de Vida Relevantes:</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>Lançamento de produtos digitais e liderança de equipes</li>
-                <li>Criação de equipes de vendas do zero e metas expressivas</li>
-                <li>Implementação de PDI e redução de turnover</li>
-                <li>Migração de sistemas para nuvem</li>
-                <li>Redução de custos e implementação de ERP</li>
-            </ul>
-            
-            <p><strong>🚀 Curiosidades e Interesses de Exploração:</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>IA aplicada ao marketing e neurociência do consumo</li>
-                <li>Vendas consultivas e Account Based Marketing</li>
-                <li>People Analytics e Employer Branding</li>
-                <li>DevOps e Inteligência Artificial</li>
-                <li>Fintechs e Blockchain</li>
-            </ul>
-            
             <p><strong>📋 Lista completa de respostas dos participantes:</strong></p>
-            ${Object.entries(skillsResponses).map(([name, resp]) => `
+            ${allSkills.map(([name, resp]) => `
                 <div class="connection-item">
                     <strong>${name}:</strong><br>
                     🎯 Conhecimentos: ${resp[0]}<br>
@@ -885,20 +845,12 @@
             `).join('')}
         `;
         
-        // Mosaico de Áreas
+        const allAreas = Object.entries(areasResponses).filter(([_, responses]) => responses[0]);
         areasMosaic.innerHTML = `
             <div class="insight-highlight">
                 <strong>📊 Síntese das Áreas - Nexum Organizacional</strong><br><br>
                 A análise das percepções sobre as diferentes áreas organizacionais revelou os seguintes insights:
             </div>
-            
-            <p><strong>🏢 Como funciona cada área (Visão dos participantes):</strong></p>
-            ${Object.entries(areasResponses).map(([name, resp]) => `
-                <div style="margin-bottom: 15px;">
-                    <strong>${name} (${participants.find(p=>p.name===name).area}):</strong><br>
-                    "${resp[0]}"
-                </div>
-            `).join('')}
             
             <p><strong>⚠️ Maiores Desafios Identificados:</strong></p>
             <ul style="margin-left: 20px; margin-bottom: 15px;">
@@ -909,17 +861,7 @@
                 <li><strong>Financeiro:</strong> Conciliar planejamento de longo prazo com necessidades imediatas</li>
             </ul>
             
-            <p><strong>🔄 Mudanças Desejadas no Relacionamento Interáreas:</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>Maior integração entre Marketing e Vendas</li>
-                <li>Alinhamento de expectativas sobre leads qualificados</li>
-                <li>Proximidade entre RH e lideranças</li>
-                <li>Compreensão de que TI precisa de planejamento</li>
-                <li>Previsibilidade nos pedidos para planejamento financeiro</li>
-            </ul>
-            
-            <p><strong>💭 O que cada área gostaria que as outras entendessem:</strong></p>
-            ${Object.entries(areasResponses).map(([name, resp]) => `
+            ${allAreas.map(([name, resp]) => `
                 <div class="connection-item">
                     <strong>${name}:</strong><br>
                     "${resp[3]}"
@@ -927,7 +869,7 @@
             `).join('')}
         `;
         
-        // Mosaico de Desafios (Reflexões)
+        const allReflections = Object.entries(reflectionsResponses).filter(([_, resp]) => resp && resp.a);
         challengesMosaic.innerHTML = `
             <div class="insight-highlight">
                 <strong>📊 Síntese dos Desafios Organizacionais - Nexum Organizacional</strong><br><br>
@@ -935,64 +877,20 @@
             </div>
             
             <p><strong>🌟 Frases que Resumem a Experiência Nexum:</strong></p>
-            ${Object.entries(reflectionsResponses).map(([name, resp]) => `
+            ${allReflections.map(([name, resp]) => `
                 <div class="connection-item">
                     <strong>${name}:</strong><br>
                     "${resp.a}"
                 </div>
             `).join('')}
             
-            <p><strong>🔍 Descobertas sobre a Organização:</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>Muitas áreas desconhecem o potencial e os desafios umas das outras</li>
-                <li>RH e TI são fundamentais para o sucesso das vendas</li>
-                <li>Áreas têm percepções distorcidas entre si</li>
-                <li>TI precisa se comunicar melhor com o negócio</li>
-                <li>Números contam histórias, mas pessoas criam soluções</li>
-            </ul>
-            
-            <p><strong>💬 Conversas Mais Marcantes:</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>Alinhamento entre Marketing e Vendas</li>
-                <li>Desafios de RH e retenção de talentos</li>
-                <li>Planejamento financeiro e orçamento colaborativo</li>
-                <li>Marketing digital e comunicação com o negócio</li>
-                <li>Investimentos em TI e governança</li>
-            </ul>
-            
-            <p><strong>🛠️ Propostas de Mudança na Colaboração:</strong></p>
-            <ul style="margin-left: 20px; margin-bottom: 15px;">
-                <li>Criar rituais mensais de alinhamento entre áreas</li>
-                <li>Implementar reuniões semanais de alinhamento comercial</li>
-                <li>Criar programa de job rotation para integrar áreas</li>
-                <li>Estabelecer comitê de governança de TI com participação das áreas</li>
-                <li>Revisar processo de planejamento orçamentário colaborativo</li>
-            </ul>
-            
-            <p><strong>📋 Lista completa de reflexões dos participantes:</strong></p>
-            ${Object.entries(reflectionsResponses).map(([name, resp]) => `
-                <div class="connection-item">
-                    <strong>${name}:</strong><br>
-                    ✨ Frase resumo: ${resp.a}<br>
-                    🔍 Descobertas: ${resp.b}<br>
-                    💬 Conversa marcante: ${resp.c}<br>
-                    🛠️ Mudança proposta: ${resp.d}
-                </div>
-            `).join('')}
-            
             <div class="insight-highlight" style="margin-top: 20px;">
                 <strong>🎯 Conclusão Geral do Nexum Organizacional:</strong><br><br>
-                O jogo revelou que a organização possui talentos e conhecimentos distribuídos que precisam ser melhor conectados. Os participantes identificaram a necessidade de:<br><br>
-                1. <strong>Maior integração interáreas</strong> - Criar espaços formais e informais de troca<br>
-                2. <strong>Comunicação mais transparente</strong> - Compartilhar desafios e limitações<br>
-                3. <strong>Alinhamento de expectativas</strong> - Construir processos colaborativos<br>
-                4. <strong>Valorização das diferentes perspectivas</strong> - Cada área traz insights únicos<br>
-                5. <strong>Cultura de aprendizado contínuo</strong> - Explorar novas habilidades e conhecimentos
+                O jogo revelou que a organização possui talentos e conhecimentos distribuídos que precisam ser melhor conectados.
             </div>
         `;
     }
 
-    // Renderizar área do mestre
     function renderMaster() {
         const participantsList = document.getElementById('participantsList');
         participantsList.innerHTML = participants.map(p => `
@@ -1015,7 +913,6 @@
             participants.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
     }
 
-    // Enviar mensagem do mestre
     window.sendAdminMessage = function() {
         const message = document.getElementById('adminMessage').value;
         const recipient = document.getElementById('messageRecipient').value;
@@ -1033,7 +930,6 @@
         alert('Mensagem enviada!');
     };
 
-    // Renderizar mensagens
     function renderMessages() {
         const messagesDiv = document.getElementById('gameMessages');
         messagesDiv.innerHTML = gameMessages.map(msg => `
@@ -1044,7 +940,6 @@
         `).join('');
     }
 
-    // Encerrar jogo
     window.endGame = function() {
         if (confirm('Tem certeza que deseja encerrar o jogo? Após encerrado, não será possível alterar os dados.')) {
             gameActive = false;
@@ -1057,7 +952,6 @@
         }
     };
 
-    // Mostrar aba
     window.showTab = function(tabId) {
         document.querySelectorAll('.tab-content').forEach(tab => {
             tab.classList.remove('active');
@@ -1068,7 +962,6 @@
         document.getElementById(tabId).classList.add('active');
         event.target.classList.add('active');
         
-        // Renderizar conteúdo específico da aba
         if (tabId === 'home') renderBoard();
         else if (tabId === 'minha-rede') renderConnections();
         else if (tabId === 'habilidades') renderSkills();
@@ -1080,11 +973,9 @@
         else if (tabId === 'mestre') renderMaster();
     };
 
-    // Definir que o jogo já foi encerrado para mostrar os mosaicos
     gameEnded = true;
     gameActive = false;
 
-    // Inicializar
     renderMessages();
     renderBoard();
     renderMaster();
